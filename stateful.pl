@@ -1,7 +1,7 @@
 use Mojolicious::Lite;
 use Mojo::Pg;
 
-helper pg => sub { state $pg = Mojo::Pg->new('postresql:///test') };
+helper pg => sub { state $pg = Mojo::Pg->new('postgresql:///test') };
 app->pg->migrations->from_data->migrate;
 app->log->path('stateful.log');
 get ('tokens/:tkn' => sub {
@@ -14,7 +14,7 @@ get ('tokens/:tkn' => sub {
     }
     else {
       app->log->error("Token $tkn not found");
-      $c->render(text => Token $tkn not found, status => 404);
+      $c->render(text => "Token $tkn not found", status => 404);
     }
   })->catch(sub { app->log->error(shift); });
 })->name('get_token');
@@ -25,7 +25,8 @@ post '/tokens/create' => sub {
   my $db = $c->pg->db;
   my $tkn
     = $db->insert(tokens => {advance => 0}, {returning => 'id'})->hash->{id};
-  my $rec = Mojo::IOLoop->recurring(
+  my $rec;
+  $rec = Mojo::IOLoop->recurring(
     0.3 => sub {
       my $nadv = $c->pg->db->update(
         tokens => {advance => \"advance + 1"},
