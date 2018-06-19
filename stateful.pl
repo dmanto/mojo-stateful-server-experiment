@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 use Mojolicious::Lite;
 use Mojo::Pg;
 
@@ -24,18 +25,18 @@ post '/tokens/create' => sub {
   my $c  = shift;
   my $db = $c->pg->db;
   my $tkn
-    = $db->insert(tokens => {advance => 0}, {returning => 'id'})->hash->{id};
+    = $db->insert(tokens => {advance => 1}, {returning => 'id'})->hash->{id};
   my $rec;
   $rec = Mojo::IOLoop->recurring(
     0.3 => sub {
       my $nadv = $c->pg->db->update(
-        tokens => {advance => \"advance + 1"},
+        tokens => {advance => \"advance + 3"},
         {id => $tkn}, {returning => 'advance'}
       )->hash->{advance};
-      Mojo::IOLoop->remove($rec) if $nadv >= 33;
+      Mojo::IOLoop->remove($rec) if $nadv >= 100;
     }
   );
-  $c->render(json => {advance => 0, token => $tkn, url => $c->url_for('get_token', tkn => $tkn)})
+  $c->render(json => {advance => 0, token => $tkn, url => $c->url_for('get_token', tkn => $tkn)->to_abs})
 };
 
 app->start;
