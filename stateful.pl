@@ -55,7 +55,8 @@ post '/tokens/create' => sub {
       url     => $c->url_for('get_token', tkn => $tkn)->to_abs,
       pid =>
         $$, # this process creates the token and keeps the state machine working
-    }
+    },
+    status => 201
   );
 };
 
