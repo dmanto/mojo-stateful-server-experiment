@@ -4,5 +4,9 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+get_hash	pforks/pfork3.pl	41;"	s
+inc_key	pforks/pfork3.pl	27;"	s
+set_hash	pforks/pfork3.pl	11;"	s
 squabble	pforks/pfork.pl	34;"	s
 squabble	pforks/pfork2.pl	48;"	s
+squabble	pforks/pfork3.pl	77;"	s
